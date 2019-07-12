@@ -24,7 +24,7 @@
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = [ 'tetondan', 'dustinmyers', 'justsml', 'luishrd', 'bigknell', 'Andrew15722' ];
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -45,6 +45,66 @@ const followersArray = [];
 </div>
 
 */
+
+const cards = document.querySelector('.cards');
+
+followersArray.forEach((follower) => {
+	cards.appendChild(createCard(follower));
+});
+
+function createCard(username) {
+	// creating the elements
+	const card = document.createElement('div');
+	const cardImg = document.createElement('img');
+	const cardInfo = document.createElement('div');
+	const cardName = document.createElement('h3');
+	const cardUserName = document.createElement('p');
+	const cardLocation = document.createElement('p');
+	const cardProfile = document.createElement('p');
+	const cardProfileAddress = document.createElement('a');
+	const cardFollowers = document.createElement('p');
+	const cardFollowing = document.createElement('p');
+	const cardBio = document.createElement('p');
+
+	// setting up the structure of the elements
+	card.appendChild(cardImg);
+	card.appendChild(cardInfo);
+	cardInfo.appendChild(cardName);
+	cardInfo.appendChild(cardUserName);
+	cardInfo.appendChild(cardLocation);
+	cardInfo.appendChild(cardProfile);
+	cardProfile.appendChild(cardProfileAddress);
+	cardInfo.appendChild(cardFollowers);
+	cardInfo.appendChild(cardFollowing);
+	cardInfo.appendChild(cardBio);
+
+	// setting up the styles
+	card.classList.add('card');
+	cardInfo.classList.add('card-info');
+	cardName.classList.add('name');
+	cardUserName.classList.add('username');
+
+	// set content.
+	axios
+		.get(`https://api.github.com/users/${username}`)
+		.then((data) => {
+			console.log('it works', data);
+			cardImg.src = data.data.avatar_url;
+			cardName.textContent = data.data.name;
+			cardUserName.textContent = data.data.login;
+			cardLocation.textContent = `Location: ${data.data.location}`;
+			cardProfileAddress.href = `https://github.com/${username}`;
+			cardProfileAddress.textContent = `https://github.com/${username}`;
+			cardFollowers.textContent = `Followers: ${data.data.followers}`;
+			cardFollowing.textContent = ` Following: ${data.data.following}`;
+			cardBio.textContent = `Bio: ${data.data.bio}`;
+		})
+		.catch((error) => {
+			console.log('API currently down', error);
+		});
+
+	return card;
+}
 
 /* List of LS Instructors Github username's: 
   tetondan
